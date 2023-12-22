@@ -96,6 +96,7 @@ pub fn process_create_token(
                 metadata_info.clone(),
                 mint.clone(),
                 signer_info.clone(),
+                mint_auth.clone(),
                 metadata_program_info.clone(),
                 token_program_info.clone(),
                 system_info.clone(),
