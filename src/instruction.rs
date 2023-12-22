@@ -51,8 +51,8 @@ pub fn mint(
 ) -> Result<Instruction, ProgramError> {
     let accounts = vec![
         AccountMeta::new(*siger, true),
-        AccountMeta::new(*config_info, true),
-        AccountMeta::new(*mint_info, true),
+        AccountMeta::new(*config_info, false),
+        AccountMeta::new(*mint_info, false),
         AccountMeta::new(*token_account, false),
         AccountMeta::new(*token_info, false),
         AccountMeta::new(*mint_auth, false),
@@ -109,8 +109,8 @@ pub fn burn(
 ) -> Result<Instruction, ProgramError> {
     let accounts = vec![
         AccountMeta::new(*siger, true),
-        AccountMeta::new(*config_info, true),
-        AccountMeta::new(*mint_info, true),
+        AccountMeta::new(*config_info, false),
+        AccountMeta::new(*mint_info, false),
         AccountMeta::new(*token_account, false),
         AccountMeta::new(*token_info, false),
         AccountMeta::new_readonly(*token_program_info, false),    

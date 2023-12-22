@@ -41,7 +41,6 @@ pub fn process_burn(
         mint_info,
         token_account,
         signer_info,
-        &[],
         rent_info,
         amt
     )?;

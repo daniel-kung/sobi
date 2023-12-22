@@ -223,12 +223,10 @@ pub fn spl_token_burn<'a>(
     new_mint: &AccountInfo<'a>,
     token_account: &AccountInfo<'a>,
     authority: &AccountInfo<'a>,
-    mint_to_seeds: &[&[u8]],
     rent_info: &AccountInfo<'a>,
     amt: u64,
 ) -> Result<(), ProgramError> {
-    msg!("spl_token_mint_to mint");
-    invoke_signed(
+    invoke(
         &spl_token::instruction::burn(
             token_program.key,
             token_account.key,
@@ -244,7 +242,6 @@ pub fn spl_token_burn<'a>(
             authority.clone(),
             rent_info.clone(),
         ],
-        &[mint_to_seeds],
     )?;
 
     msg!("spl_token_burn success");

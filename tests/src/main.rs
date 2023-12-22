@@ -258,12 +258,6 @@ fn burn_dev(mint_pubkey: &Pubkey) {
     let token_account = get_associated_token_address(&signer_pubkey, &mint_pubkey);
     println!("token_account:::{:?}", token_account);
 
-    if client.get_balance(&token_account).unwrap() == 0 {
-        let new_token_account_instruction =
-            create_associated_token_account(&signer_pubkey, &signer_pubkey, &mint_pubkey);
-        instructions.push(new_token_account_instruction);
-    }
-
     let burnargs = BurnArgs {
         amt: 1000,
     };
@@ -295,5 +289,15 @@ fn burn_dev(mint_pubkey: &Pubkey) {
 fn main() {
     // config_dev();
     let config_info = Pubkey::from_str("AqnULXaaHcxK4fRPJDnhjQfjQgBiSiJyb6HmFS5DuvfQ").unwrap();
-    create_dev();
+    let token_info = Pubkey::from_str("56F6DzdZLJ1eVTkqxMoZYWfMDjpw7Y42xZZccKm7ziR").unwrap();
+    let client = RpcClient::new("https://api.devnet.solana.com".to_string());
+    let account = client.get_account(&token_info).unwrap();
+    let tokendata: TokenData = try_from_slice_unchecked(&account.data).unwrap();
+    println!("tokendata:::{:?}", tokendata);
+
+    // create_dev();
+    let mint_pubkey = Pubkey::from_str("9jftwQjuh85NndQb77cEFj2BkE2dRbCPv2Apag4UHMjj").unwrap();
+    // mint_dev(&mint_pubkey);
+    burn_dev(&mint_pubkey)
+
 }
