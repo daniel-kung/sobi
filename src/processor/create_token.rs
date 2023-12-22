@@ -70,7 +70,7 @@ pub fn process_create_token(
         let cmv3 = CreateMetadataAccountV3 {
             metadata: *metadata_info.key,
             mint: *mint.key,
-            mint_authority: *signer_info.key,
+            mint_authority: *mint_auth.key,
             payer: *signer_info.key,
             update_authority: (*signer_info.key, true),
             system_program: *system_info.key,
