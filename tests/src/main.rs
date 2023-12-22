@@ -27,30 +27,31 @@ use spl_token::{
 use std::env;
 use std::str::FromStr;
 
-const PROGRAM_ID: &str = "EuVatdjfBd1U8F3ihqZgdQqeZp2NAXdAjrD2mRjHh7ok";
-const METADATA_PROGRAM: Pubkey = mpl_token_metadata::ID;
+const PROGRAM_ID: &str = "BCCBkgbofwLpBuJgfKzuUtxBSPxvxTMq6dqBeXzQ1vG7";
+const METADATA_PROGRAM: &str = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s";
 
 fn create_dev() {
     let client = RpcClient::new("https://api.devnet.solana.com".to_string());
     let program_id = Pubkey::from_str(PROGRAM_ID).unwrap();
     dotenv().ok();
     let kp_str = env::var("SECRET").unwrap();
-    let signer = Keypair::from_base58_string(kp_str);
+    let metadata_program = Pubkey::from_str(METADATA_PROGRAM).unwrap();
+    let signer = Keypair::from_base58_string(&kp_str.as_str());
     let token_program = spl_token::ID;
     let auth = signer.pubkey();
     let signer_pubkey = signer.pubkey();
-    let new_mint = Keypair::generate();
+    let new_mint = Keypair::new();
     let mint_pubkey = new_mint.pubkey();
     let seeds = &[
         program_id.as_ref(),
-        mint_pubkey,
+        mint_pubkey.as_ref(),
         "token_info".as_bytes(),
     ];
     let (token_info, _) = Pubkey::find_program_address(seeds, &program_id);
     println!(" token_info::::::{:?}", token_info.to_string());
     let seeds = &[
         program_id.as_ref(),
-        mint_pubkey,
+        mint_pubkey.as_ref(),
         "mint_auth".as_bytes(),
     ];
     let (auth, _) = Pubkey::find_program_address(seeds, &program_id);
@@ -58,10 +59,10 @@ fn create_dev() {
 
     let metadata_seeds = &[
         "metadata".as_bytes(),
-        &METADATA_PROGRAM.as_ref(),
+        &metadata_program.as_ref(),
         mint_pubkey.as_ref(),
     ];
-    let (metadata_key, _) = Pubkey::find_program_address(metadata_seeds, &METADATA_PROGRAM);
+    let (metadata_key, _) = Pubkey::find_program_address(metadata_seeds, &metadata_program);
     println!(" metadata_key::::::{:?}", metadata_key.to_string());
     let mut instructions = vec![];
     let tokenargs = CreateTokenArgs {
@@ -76,10 +77,10 @@ fn create_dev() {
             &program_id,
             &signer_pubkey,
             &token_info,
-            new_mint.pubkey(),
+            &mint_pubkey,
             &auth,
             &metadata_key,
-            &METADATA_PROGRAM,
+            &metadata_program,
             tokenargs,
         )
         .unwrap(),
@@ -101,7 +102,7 @@ fn config_dev() {
     let program_id = Pubkey::from_str(PROGRAM_ID).unwrap();
     dotenv().ok();
     let kp_str = env::var("SECRET").unwrap();
-    let signer = Keypair::from_base58_string(kp_str);
+    let signer = Keypair::from_base58_string(&kp_str.as_str());
     let token_program = spl_token::ID;
     let auth = signer.pubkey();
     let signer_pubkey = signer.pubkey();
@@ -128,12 +129,12 @@ fn config_dev() {
     println!("signature:::{:?}", &signature);
 }
 
-fn mint_dev(mint_key: &Pubkey) {
+fn mint_dev(mint_pubkey: &Pubkey) {
     let client = RpcClient::new("https://api.devnet.solana.com".to_string());
     let program_id = Pubkey::from_str(PROGRAM_ID).unwrap();
     dotenv().ok();
     let kp_str = env::var("SECRET").unwrap();
-    let signer = Keypair::from_base58_string(kp_str);
+    let signer = Keypair::from_base58_string(&kp_str.as_str());
     let token_program = spl_token::ID;
     let signer_pubkey = signer.pubkey();
     let seeds = &[program_id.as_ref(), "config".as_bytes()];
@@ -142,14 +143,14 @@ fn mint_dev(mint_key: &Pubkey) {
 
     let seeds = &[
         program_id.as_ref(),
-        mint_key.as_ref(),
+        mint_pubkey.as_ref(),
         "token_info".as_bytes(),
     ];
     let (token_info, _) = Pubkey::find_program_address(seeds, &program_id);
     println!(" token_info::::::{:?}", token_info.to_string());
     let seeds = &[
         program_id.as_ref(),
-        mint_key.as_ref(),
+        mint_pubkey.as_ref(),
         "mint_auth".as_bytes(),
     ];
     let (auth, _) = Pubkey::find_program_address(seeds, &program_id);
@@ -182,7 +183,7 @@ fn mint_dev(mint_key: &Pubkey) {
             &program_id,
             &signer_pubkey,
             &config_info,
-            &mint_key,
+            &mint_pubkey,
             &token_account,
             &token_info,
             &auth,
@@ -202,12 +203,12 @@ fn mint_dev(mint_key: &Pubkey) {
     println!("signature:::{:?}", &signature);
 }
 
-fn burn_dev(mint_key: &Pubkey) {
+fn burn_dev(mint_pubkey: &Pubkey) {
     let client = RpcClient::new("https://api.devnet.solana.com".to_string());
     let program_id = Pubkey::from_str(PROGRAM_ID).unwrap();
     dotenv().ok();
     let kp_str = env::var("SECRET").unwrap();
-    let signer = Keypair::from_base58_string(kp_str);
+    let signer = Keypair::from_base58_string(&kp_str.as_str());
     let token_program = spl_token::ID;
     let signer_pubkey = signer.pubkey();
     let seeds = &[program_id.as_ref(), "config".as_bytes()];
@@ -216,14 +217,14 @@ fn burn_dev(mint_key: &Pubkey) {
 
     let seeds = &[
         program_id.as_ref(),
-        mint_key.as_ref(),
+        mint_pubkey.as_ref(),
         "token_info".as_bytes(),
     ];
     let (token_info, _) = Pubkey::find_program_address(seeds, &program_id);
     println!(" token_info::::::{:?}", token_info.to_string());
     let seeds = &[
         program_id.as_ref(),
-        mint_key.as_ref(),
+        mint_pubkey.as_ref(),
         "mint_auth".as_bytes(),
     ];
     let (auth, _) = Pubkey::find_program_address(seeds, &program_id);
@@ -256,7 +257,7 @@ fn burn_dev(mint_key: &Pubkey) {
             &program_id,
             &signer_pubkey,
             &config_info,
-            &mint_key,
+            &mint_pubkey,
             &token_account,
             &token_info,
             &token_program,
@@ -276,5 +277,7 @@ fn burn_dev(mint_key: &Pubkey) {
 }
 
 fn main() {
-    config_dev();
+    // config_dev();
+    let config_info = Pubkey::from_str("AqnULXaaHcxK4fRPJDnhjQfjQgBiSiJyb6HmFS5DuvfQ").unwrap();
+    create_dev();
 }
