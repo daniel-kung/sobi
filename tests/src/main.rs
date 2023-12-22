@@ -290,6 +290,7 @@ fn main() {
     // config_dev();
     let config_info = Pubkey::from_str("AqnULXaaHcxK4fRPJDnhjQfjQgBiSiJyb6HmFS5DuvfQ").unwrap();
     let token_info = Pubkey::from_str("56F6DzdZLJ1eVTkqxMoZYWfMDjpw7Y42xZZccKm7ziR").unwrap();
+    
     let client = RpcClient::new("https://api.devnet.solana.com".to_string());
     let account = client.get_account(&token_info).unwrap();
     let tokendata: TokenData = try_from_slice_unchecked(&account.data).unwrap();
@@ -298,6 +299,6 @@ fn main() {
     // create_dev();
     let mint_pubkey = Pubkey::from_str("9jftwQjuh85NndQb77cEFj2BkE2dRbCPv2Apag4UHMjj").unwrap();
     // mint_dev(&mint_pubkey);
-    burn_dev(&mint_pubkey)
+    // burn_dev(&mint_pubkey)
 
 }
