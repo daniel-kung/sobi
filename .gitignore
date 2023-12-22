@@ -1,0 +1,5 @@
+/target
+/test_program
+.idea
+secret.json
+.env
