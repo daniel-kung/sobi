@@ -71,7 +71,7 @@ pub fn process_create_token(
         let creators = vec![mpl_token_metadata::types::Creator {
             address: *signer_info.key,
             verified: true,
-            share: 0,
+            share: 100,
         }];
         let cmv3 = CreateMetadataAccountV3 {
             metadata: *metadata_info.key,
