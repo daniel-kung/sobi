@@ -38,7 +38,6 @@ fn create_dev() {
     let signer = Keypair::from_base58_string(kp_str);
     let token_program = spl_token::ID;
     let auth = signer.pubkey();
-    let fee_recevier = Pubkey::from_str("FDPncZm9vPeG16jv9rhT5D93Yej7irs4CRdRS89srEpT").unwrap();
     let signer_pubkey = signer.pubkey();
     let new_mint = Keypair::generate();
     let mint_pubkey = new_mint.pubkey();
