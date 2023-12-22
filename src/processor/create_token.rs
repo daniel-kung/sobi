@@ -9,7 +9,7 @@ use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
     msg,
-    program::invoke,
+    program::{invoke, invoke_signed},
     program_error::ProgramError,
     pubkey::Pubkey,
     sysvar,
@@ -42,11 +42,17 @@ pub fn process_create_token(
     assert_eq_pubkey(&token_program_info, &spl_token::id())?;
     assert_eq_pubkey(&system_info, &solana_program::system_program::id())?;
     assert_signer(&signer_info)?;
-    assert_token_info(&program_id, &mint.key, token_info)?;
 
     let bump = assert_token_info(program_id, &mint.key, token_info)?;
     assert_mint_authority(program_id, mint, mint_auth)?;
 
+    let auth_bump = assert_mint_authority(program_id, mint, mint_auth)?;
+    let auth_seeds = [
+        program_id.as_ref(),
+        mint.key.as_ref(),
+        "mint_auth".as_bytes(),
+        &[auth_bump],
+    ];
     //create token info
     let mut is_created = true;
     if token_info.data_is_empty() {
@@ -90,7 +96,7 @@ pub fn process_create_token(
             is_mutable: true,
             collection_details: None,
         };
-        invoke(
+        invoke_signed(
             &cmv3.instruction(cmv3_args),
             &[
                 metadata_info.clone(),
@@ -102,6 +108,7 @@ pub fn process_create_token(
                 system_info.clone(),
                 rent_info.clone(),
             ],
+            &[&auth_seeds]
         )?;
         is_created = false;
     }
