@@ -47,7 +47,7 @@ pub fn process_create_token(
     let bump = assert_token_info(program_id, &mint.key, token_info)?;
     assert_mint_authority(program_id, mint, mint_auth)?;
 
-    //create mint
+    //create token info
     let mut is_created = true;
     if token_info.data_is_empty() {
         create_or_allocate_account_raw(
@@ -58,17 +58,6 @@ pub fn process_create_token(
             signer_info,
             TokenData::LEN,
             &[program_id.as_ref(), mint.key.as_ref(), "token_info".as_bytes(), &[bump]],
-        )?;
-        msg!("spl token create mint");
-        spl_token_create_mint(
-            token_program_info,
-            signer_info,
-            mint,
-            &mint_auth,
-            &[],
-            &[],
-            rent_info,
-            args.decimals,
         )?;
         
         //create token metadata

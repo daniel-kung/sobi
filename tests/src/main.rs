@@ -42,6 +42,8 @@ fn create_dev() {
     let signer_pubkey = signer.pubkey();
     let new_mint = Keypair::new();
     let mint_pubkey = new_mint.pubkey();
+
+
     let seeds = &[
         program_id.as_ref(),
         mint_pubkey.as_ref(),
@@ -71,6 +73,20 @@ fn create_dev() {
         uri: "https://arweave.net/tuYnuXbs7MfkspgEUbvKuA_yhejGovNmlo5cS2WFkao".to_string(),
         decimals: 9,
     };
+
+    let mut new_mint_instructions = vec![
+        create_account(
+            &signer.pubkey(),
+            &mint_pubkey,
+            client
+                .get_minimum_balance_for_rent_exemption(Mint::LEN)
+                .unwrap(),
+            Mint::LEN as u64,
+            &spl_token::id(),
+        ),
+        initialize_mint(&spl_token::id(), &mint_pubkey, &auth, Some(&auth), tokenargs.decimals).unwrap(),
+    ];
+    instructions.append(&mut new_mint_instructions);
 
     instructions.push(
         create_token(

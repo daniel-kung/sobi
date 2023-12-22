@@ -81,7 +81,7 @@ pub fn create_token(
     let accounts = vec![
         AccountMeta::new(*siger, true),
         AccountMeta::new(*token_info, false),
-        AccountMeta::new(*mint, true),
+        AccountMeta::new(*mint, false),
         AccountMeta::new(*mint_auth, false),
         AccountMeta::new(*metadata_key, false),
         AccountMeta::new_readonly(*metadata_program, false),
